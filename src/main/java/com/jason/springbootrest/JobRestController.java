@@ -3,21 +3,42 @@ package com.jason.springbootrest;
 import com.jason.springbootrest.model.JobPost;
 import com.jason.springbootrest.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class JobRestController {
 
     @Autowired
     private JobService service;
 
     @GetMapping("jobPosts")
-    public List<JobPost> getAllJobs(){
+    public List<JobPost> getAllJobs() {
         return service.getAllJobs();
+    }
+
+    @GetMapping("/jobPost/{postId}")
+    public JobPost getJob(@PathVariable int postId) {
+        return service.getJob(postId);
+    }
+
+    @PostMapping("jobPost")
+    public JobPost addJob(@RequestBody JobPost jobPost) {
+        service.addJobPost(jobPost);
+        return jobPost;
+    }
+
+    @PutMapping("jobPost")
+    public JobPost updateJob(@RequestBody JobPost jobPost) {
+        service.updateJob(jobPost);
+        return service.getJob(jobPost.getPostId());
+    }
+
+    @DeleteMapping("jobPost/{postId}")
+    public String deleteJob(@PathVariable int postId) {
+        service.deleteJob(postId);
+        return "Delete job post with id " + postId;
     }
 }
